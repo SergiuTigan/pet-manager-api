@@ -25,6 +25,7 @@ async function bootstrap() {
       'https://api-pet.tigan.dev', // Production API domain
       'https://pet.tigan.dev', // Production frontend domain
       'http://pet.tigan.dev', // Production frontend domain (HTTP)
+      'https://pet-manager.tigan.dev', // Production frontend domain
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
