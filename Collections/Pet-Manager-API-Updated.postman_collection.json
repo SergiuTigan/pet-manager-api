@@ -1,0 +1,1135 @@
+{
+	"info": {
+		"_postman_id": "pet-manager-api-complete",
+		"name": "🐾 Pet Manager API - Complete Collection",
+		"description": "Complete API collection for Pet Manager with ALL endpoints and CRUD operations.\n\n## Quick Start\n1. Import collection and environment files\n2. Set environment to 'Pet Manager API'\n3. Register a new user or use Demo Login\n4. Test any endpoint!\n\n## Features\n✅ User Registration (Owners & Veterinarians)\n✅ Complete CRUD for all entities\n✅ Real PostgreSQL database operations\n✅ Authentication with JWT\n✅ Comprehensive validation\n✅ Statistics and analytics",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Registration & Authentication",
+			"item": [
+				{
+					"name": "Register Pet Owner",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Maria Popescu\",\n    \"email\": \"maria.popescu@gmail.com\",\n    \"phone\": \"+40722123456\",\n    \"password\": \"MySecurePass123!\",\n    \"preferences\": {\n        \"notifications\": {\n            \"email\": true,\n            \"push\": true,\n            \"reminders\": true\n        },\n        \"language\": \"ro\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/register/owner",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["register", "owner"]
+						}
+					}
+				},
+				{
+					"name": "Register Veterinarian",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dr. Ion Marinescu\",\n    \"email\": \"ion.marinescu@veterinar.ro\",\n    \"phone\": \"+40721987654\",\n    \"password\": \"VetSecure123!\",\n    \"clinic_name\": \"Clinica Veterinară AnimalCare\",\n    \"clinic_address\": \"Str. Sănătății nr. 45, București\",\n    \"license_number\": \"VET-BUC-2024-001\",\n    \"specializations\": [\"Chirurgie\", \"Oftalmologie\"],\n    \"working_hours\": {\n        \"monday\": \"08:00-18:00\",\n        \"tuesday\": \"08:00-18:00\",\n        \"wednesday\": \"08:00-18:00\",\n        \"thursday\": \"08:00-18:00\",\n        \"friday\": \"08:00-18:00\",\n        \"saturday\": \"09:00-14:00\",\n        \"sunday\": \"closed\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/register/veterinarian",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["register", "veterinarian"]
+						}
+					}
+				},
+				{
+					"name": "Check Email Availability",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/register/check-email",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["register", "check-email"]
+						}
+					}
+				},
+				{
+					"name": "Demo Login - Owner",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.access_token) {",
+									"        pm.environment.set('accessToken', response.data.access_token);",
+									"        pm.environment.set('userId', response.data.user.id);",
+									"        pm.environment.set('userType', response.data.user.type);",
+									"        console.log('✅ Access token saved to environment');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userType\": \"owner\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/auth/demo-login",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["auth", "demo-login"]
+						}
+					}
+				},
+				{
+					"name": "Demo Login - Veterinarian",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.access_token) {",
+									"        pm.environment.set('accessToken', response.data.access_token);",
+									"        pm.environment.set('userId', response.data.user.id);",
+									"        pm.environment.set('userType', response.data.user.type);",
+									"        console.log('✅ Access token saved to environment');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userType\": \"veterinarian\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/auth/demo-login",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["auth", "demo-login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 Users - CRUD",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/users",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/users/{{userId}}",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["users", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"phone\": \"+40729876543\",\n    \"type\": \"owner\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/users",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["users"]
+						}
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated User Name\",\n    \"phone\": \"+40721111111\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/users/{{userId}}",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["users", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/users/{{userId}}",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["users", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get User Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/users/statistics",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["users", "statistics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🐾 Pets - CRUD",
+			"item": [
+				{
+					"name": "Get All Pets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/pets",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets"]
+						}
+					}
+				},
+				{
+					"name": "Get Pet by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/pets/10",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets", "10"]
+						}
+					}
+				},
+				{
+					"name": "Create Pet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"owner_id\": 1,\n    \"name\": \"Buddy\",\n    \"species\": \"Câine\",\n    \"breed\": \"Labrador Retriever\",\n    \"gender\": \"Masculin\",\n    \"birth_date\": \"2022-05-15\",\n    \"weight\": 28.5,\n    \"microchip\": \"RO642987654321098\",\n    \"color\": \"Maro închis\",\n    \"is_neutered\": true,\n    \"medical_conditions\": [],\n    \"allergies\": [],\n    \"notes\": \"Câine foarte prietenos și obedient.\",\n    \"emergency_contact\": {\n        \"name\": \"Ana Georgescu\",\n        \"phone\": \"+40723456789\",\n        \"relationship\": \"Proprietară\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/pets",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets"]
+						}
+					}
+				},
+				{
+					"name": "Update Pet",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"weight\": 30.0,\n    \"notes\": \"Greutatea actualizată după controlul medical.\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/pets/10",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets", "10"]
+						}
+					}
+				},
+				{
+					"name": "Delete Pet",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/pets/10",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets", "10"]
+						}
+					}
+				},
+				{
+					"name": "Get Pet Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/pets/statistics",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets", "statistics"]
+						}
+					}
+				},
+				{
+					"name": "Get Pet Health Summary",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/pets/10/health-summary",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["pets", "10", "health-summary"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "💉 Vaccinations - CRUD",
+			"item": [
+				{
+					"name": "Get All Vaccinations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/vaccinations",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["vaccinations"]
+						}
+					}
+				},
+				{
+					"name": "Get Vaccination by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/vaccinations/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["vaccinations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Create Vaccination",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pet_id\": 10,\n    \"administered_by_vet_id\": 2,\n    \"vaccine_name\": \"Rabies Vaccine\",\n    \"vaccine_type\": \"antirabic\",\n    \"manufacturer\": \"Pfizer Animal Health\",\n    \"batch_number\": \"RB2024001\",\n    \"date_administered\": \"2024-01-15\",\n    \"next_due_date\": \"2025-01-15\",\n    \"clinic_name\": \"Clinica Veterinară Pro Animal\",\n    \"dose\": \"1ml\",\n    \"site_of_injection\": \"subcutaneous\",\n    \"status\": \"valid\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/vaccinations",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["vaccinations"]
+						}
+					}
+				},
+				{
+					"name": "Update Vaccination",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"notes\": \"No adverse reactions observed\",\n    \"status\": \"valid\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/vaccinations/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["vaccinations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Vaccination",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/vaccinations/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["vaccinations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Vaccination Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/vaccinations/statistics",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["vaccinations", "statistics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🏥 Consultations - CRUD",
+			"item": [
+				{
+					"name": "Get All Consultations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations"]
+						}
+					}
+				},
+				{
+					"name": "Get Consultation by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Create Consultation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pet_id\": 10,\n    \"vet_id\": 2,\n    \"appointment_date\": \"2025-01-15T10:00:00\",\n    \"consultation_type\": \"control_rutina\",\n    \"reason\": \"Control de rutină anual\",\n    \"status\": \"scheduled\",\n    \"weight\": 28.5,\n    \"temperature\": 38.2,\n    \"heart_rate\": 120,\n    \"invoice_amount\": 150.00\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations"]
+						}
+					}
+				},
+				{
+					"name": "Update Consultation",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"diagnosis\": \"Sănătate excelentă\",\n    \"status\": \"completed\",\n    \"treatment\": \"Control de rutină complet, niciun tratament necesar\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Consultation",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Upcoming Consultations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations/upcoming?days=7",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations", "upcoming"],
+							"query": [
+								{
+									"key": "days",
+									"value": "7"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Consultation Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/consultations/statistics",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["consultations", "statistics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📄 Documents - CRUD",
+			"item": [
+				{
+					"name": "Get All Documents",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/documents",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["documents"]
+						}
+					}
+				},
+				{
+					"name": "Get Document by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/documents/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["documents", "1"]
+						}
+					}
+				},
+				{
+					"name": "Upload Document",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pet_id\": 10,\n    \"uploaded_by\": 1,\n    \"document_type\": \"certificat\",\n    \"title\": \"Certificat Vaccinare Rabies\",\n    \"description\": \"Certificat pentru vaccinarea antirabică\",\n    \"file_url\": \"https://example.com/certificates/rabies_cert_buddy.pdf\",\n    \"file_type\": \"application/pdf\",\n    \"file_size\": 125000,\n    \"tags\": [\"vaccinare\", \"rabies\", \"certificat\"]\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/documents",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["documents"]
+						}
+					}
+				},
+				{
+					"name": "Update Document",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_public\": true,\n    \"notes\": \"Document verificat și aprobat\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/documents/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["documents", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Document",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/documents/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["documents", "1"]
+						}
+					}
+				},
+				{
+					"name": "Download Document",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/documents/1/download",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["documents", "1", "download"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🍽️ Feeding Schedules - CRUD",
+			"item": [
+				{
+					"name": "Get All Feeding Schedules",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/feeding-schedules",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["feeding-schedules"]
+						}
+					}
+				},
+				{
+					"name": "Get Feeding Schedule by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/feeding-schedules/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["feeding-schedules", "1"]
+						}
+					}
+				},
+				{
+					"name": "Create Feeding Schedule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pet_id\": 10,\n    \"food_brand\": \"Royal Canin\",\n    \"food_type\": \"croquettes\",\n    \"daily_amount\": 300,\n    \"daily_amount_unit\": \"g\",\n    \"meals_per_day\": 2,\n    \"meal_times\": [\"08:00\", \"18:00\"],\n    \"treats_allowed\": true,\n    \"treats_daily_limit\": 50,\n    \"treats_daily_limit_unit\": \"g\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/feeding-schedules",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["feeding-schedules"]
+						}
+					}
+				},
+				{
+					"name": "Update Feeding Schedule",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"daily_amount\": 320,\n    \"special_instructions\": \"Hrană împărțită în porții egale\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/feeding-schedules/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["feeding-schedules", "1"]
+						}
+					}
+				},
+				{
+					"name": "Add Feeding Note",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"note\": \"A mâncat toată hrana\",\n    \"extra_food\": \"Niciun extra\",\n    \"created_by\": 1\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/feeding-schedules/1/feeding-note",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["feeding-schedules", "1", "feeding-note"]
+						}
+					}
+				},
+				{
+					"name": "Get Feeding Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/feeding-schedules/1/recommendations",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["feeding-schedules", "1", "recommendations"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔔 Notifications - CRUD",
+			"item": [
+				{
+					"name": "Get All Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications"]
+						}
+					}
+				},
+				{
+					"name": "Get Notification by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications", "1"]
+						}
+					}
+				},
+				{
+					"name": "Create Notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1,\n    \"pet_id\": 10,\n    \"type\": \"appointment_reminder\",\n    \"title\": \"Reminder Consultație\",\n    \"message\": \"Consultația pentru Buddy este programată pentru mâine\",\n    \"priority\": \"high\",\n    \"action_required\": true,\n    \"scheduled_for\": \"2025-01-14T09:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications"]
+						}
+					}
+				},
+				{
+					"name": "Update Notification",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"Updated notification message\",\n    \"priority\": \"medium\"\n}"
+						},
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications", "1"]
+						}
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications/1/mark-read",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications", "1", "mark-read"]
+						}
+					}
+				},
+				{
+					"name": "Mark All Notifications as Read",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications/mark-all-read/1",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications", "mark-all-read", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Notification Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{fullApiUrl}}/notifications/statistics",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["notifications", "statistics"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "⚙️ System & Health",
+			"item": [
+				{
+					"name": "API Welcome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fullApiUrl}}/",
+							"host": ["{{fullApiUrl}}"],
+							"path": [""]
+						}
+					}
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fullApiUrl}}/health",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "System Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{fullApiUrl}}/statistics",
+							"host": ["{{fullApiUrl}}"],
+							"path": ["statistics"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	}
+}
